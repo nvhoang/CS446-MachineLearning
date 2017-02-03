@@ -1,0 +1,101 @@
+\input{cs446.tex}
+\usepackage{amsmath}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithm
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+
+\DeclareMathOperator{\proj}{proj}
+\newcommand{\vctproj}[2][]{\proj_{\vec{#1}}\vec{#2}}
+
+\oddsidemargin 0in
+\evensidemargin 0in
+\textwidth 6.5in
+\topmargin -0.5in
+\textheight 9.0in
+
+\begin{document}
+
+\solution{Bangqi Wang}{\today}{1}{Spring 2017}
+% Fill in the above, for example, as follows:
+% \solution{Joe Smith}{\today}{1}{Fall 2012}
+
+\pagestyle{myheadings}  % Leave this command alone
+
+\begin{enumerate}
+\item[1.] Answer to problem 1
+	\begin{enumerate}
+	\item[a.] The main idea of the algorithm is to construct an initial hypothesis and then update the hypothesis when iterating the training set. For instance, the algorithm constructs an initial complete hypothesis that is the conjunction of all variables and their negations. i.e. ${\mathbf H} = (x_1 \land x_2 \land ... \land x_n \land \neg x_1 \land \neg x_2 \land ... \land \neg x_n)$. Then, for each positive sequences in training set, the algorithm updates the hypothesis by removing the contradictions. i.e. $x_i = a$ in hypothesis, but $x_i = b$ in sequence. After finishing iterating positive sequences, using negative sequences to check the hypothesis. If there is any contradiction between negative sequence and hypothesis, the algorithm will indicate that there is no consistent hypothesis.
+		\begin{algorithm}
+		\caption{Pseudocode:}\label{euclid}
+		\begin{algorithmic}[1]
+		\Procedure{MyProcedure}{}
+		\State $\textit{result} \gets \textit{$(x_1 = 1) \land (x_2 = 1) \land ... \land (x_n = 1) \land (x_1 = 0) \land (x_2 = 0) \land ... \land (x_n = 0)$}$
+		\For{\texttt{each $'+'$ sequence \textit{$S$} in training set}}
+		\If {\texttt{$(x_i = v) \neq S_i$}}
+		\State remove $(x_i = v)$ from $\textit{result}$
+		\EndIf
+      	\EndFor
+		\For{\texttt{each $'-'$ sequence \textit{$S$} in training set}}
+		\If {\texttt{\textit{$S$} contrdict with $\textit{result}$}}
+		\State Indicate: no consistent hypothesis
+		\State \textbf{halt}
+		\EndIf
+      	\EndFor
+      	\State \textbf{return} $\textit{result}$
+		\EndProcedure
+		\end{algorithmic}
+		\end{algorithm}
+	\item[b.] Inorder to prove the correctness of this algorithm, I will prove that there are neither \textbf{false positive} nor \textbf{false negative}.
+		\begin{enumerate}
+			\item[b.1] If there is a \textbf{false positive}, there are at least one condition absent from $\textit{result}$, say $(x_i = v)$. However, in the first loop, the algorithm eliminated $(x_i = v)$ from complete conjunction, because it contradicts with other positive examples. Those two assumptions are mutually conflicting.
+			\item[b.2] If there is a \textbf{false negative}, there are at least one incorrect condition in $\textit{result}$, say $(x_i = v)$. However, in the first loop, the algorithm eliminated all conditions that contradict with other positive examples. The remaining $(x_i = v)$ should not contradict with any positive sequence. Therefore, those two assumptions are mutually conflicting.
+		\end{enumerate}
+		Therefore, the $\textit{result}$ contains neither \textbf{false positive} nor \textbf{false negative}. The algorithm is correct.
+	\item[c.] The algorithm traverses $m$ training examples and checks each example with hypothesis $\textit{result}$ that has $2n$ conditions at worst. The runtime should be ${\mathbf O(mn)}$.
+	\item[d.] There might be \textbf{false negative} in this situation. The example labeled as positive must be positive. However, the example labeled as negative might be positive, because the algorithm updates the hypothesis according to positive examples in training examples. The hypothesis changed from general to specific. The hypothesis $\textit{result}$ is the superset of real hypothesis ${\mathbf H}$.
+	\end{enumerate}
+\item[2.] Answer to problem 2
+	\begin{enumerate}
+	\item[a.] Assume a vector $\vec{w}$ that is perpendicular to the hyperplane. Point $x^* = (x_1^*,x_2^*,...,x_n^*)$ stands for any point in hyperplane. Define $\vec{v}$ as vector from point $x^0 = (x_0^0,x_1^0,...,x_n^0)$ to point $x^*$.
+	\begin{displaymath}
+	\vec{v} = 
+		\begin{bmatrix}
+   			x_0^* - x_0^0, &x_1^* - x_1^0, &..., &x_n^* - x_n^0\\
+		\end{bmatrix}^T
+	\end{displaymath}
+	Then, the length $D$ of the projection of $\vec{v}$ onto $\vec{w}$ is the distance from the point to the plane.
+	\begin{eqnarray}
+		D & & = |\vctproj[w]{v}|  \label{eq:lin_prog_discriminant_obj}\\
+			& & = \frac{|\vec{w}^T\cdot\vec{v}|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_constraint}\\
+			& & = \frac{| w_0\cdot(x_0^* - x_0^0) + w_1\cdot(x_1^* - x_1^0) +...+ w_n\cdot(x_n^* - x_n^0)|}{\sqrt{w_0^2+w_1^2+...+w_n^2}} \label{eq:lin_prog_discriminant_bound}\\
+			& & = \frac{| w_0\cdot x_0^* - w_0\cdot x_0^0 + w_1\cdot x_1^* - w_1\cdot x_1^0 +...+ w_n\cdot x_n^* - w_n\cdot x_n^0|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_bound} \\
+			& & = \frac{| \theta + w_0\cdot x_0^* + w_1\cdot x_1^* +...+ w_n\cdot x_n^*|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_bound}\\
+			& & = \frac{|\vec{w}^T \cdot \vec{x^*} + \theta|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_bound}
+	\end{eqnarray}
+	\item[b.]
+		\begin{eqnarray}
+			\vec{w}^T \cdot \vec{x} + \theta_2 & & = 0 \\
+			\vec{w}^T \cdot \vec{x} & & = - \theta_2\\
+			D & & = \frac{|\vec{w}^T \cdot \vec{x^*} + \theta|}{\lVert\vec{w}\rVert}\\
+			& & = \frac{|\theta_1 - \theta_2|}{\lVert\vec{w}\rVert}
+		\end{eqnarray}
+	\end{enumerate}
+\item[3.] Answer to problem 3
+	\begin{enumerate}
+	\item[a.]
+		\begin{enumerate}
+			\item[a.1]
+			\item[a.2]
+			\item[a.3]
+		\end{enumerate}
+	\item[b.]
+		\begin{enumerate}
+			\item[b.1]
+			\item[b.2]
+			\item[b.3]
+			\item[b.4]
+		\end{enumerate}
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}
+
