@@ -2,6 +2,8 @@
 \usepackage{amsmath}
 \usepackage{algorithm}% http://ctan.org/pkg/algorithm
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{graphicx}
+\graphicspath{ {images/} }
 
 \DeclareMathOperator{\proj}{proj}
 \newcommand{\vctproj}[2][]{\proj_{\vec{#1}}\vec{#2}}
@@ -55,7 +57,7 @@
 	\end{enumerate}
 \item[2.] Answer to problem 2
 	\begin{enumerate}
-	\item[a.] Assume a vector $\vec{w}$ that is perpendicular to the hyperplane. Point $x^* = (x_1^*,x_2^*,...,x_n^*)$ stands for any point in hyperplane. Define $\vec{v}$ as vector from point $x^0 = (x_0^0,x_1^0,...,x_n^0)$ to point $x^*$.
+	\item[a.] Assume a vector $\vec{w}$ that is perpendicular to the hyperplane. Point $x^* = (x_1^*,x_2^*,...,x_n^*)$ stands for any point in hyperplane. Define $\vec{v}$ as vector from point $x^0 = (x_0^0,x_1^0,...,x_n^0)$ to point $x^*$. \textit{(I use $x^*$ and $x^0$ to express the two points. $^*$ and $^0$ are just labels.)}
 	\begin{displaymath}
 	\vec{v} = 
 		\begin{bmatrix}
@@ -71,11 +73,11 @@
 			& & = \frac{| \theta + w_0\cdot x_0^* + w_1\cdot x_1^* +...+ w_n\cdot x_n^*|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_bound}\\
 			& & = \frac{|\vec{w}^T \cdot \vec{x^*} + \theta|}{\lVert\vec{w}\rVert} \label{eq:lin_prog_discriminant_bound}
 	\end{eqnarray}
-	\item[b.]
+	\item[b.] The distance $D$ between the hyperplanes:
 		\begin{eqnarray}
 			\vec{w}^T \cdot \vec{x} + \theta_2 & & = 0 \\
 			\vec{w}^T \cdot \vec{x} & & = - \theta_2\\
-			D & & = \frac{|\vec{w}^T \cdot \vec{x^*} + \theta|}{\lVert\vec{w}\rVert}\\
+			D & & = \frac{|\vec{w}^T \cdot \vec{x} + \theta_1|}{\lVert\vec{w}\rVert}\\
 			& & = \frac{|\theta_1 - \theta_2|}{\lVert\vec{w}\rVert}
 		\end{eqnarray}
 	\end{enumerate}
@@ -83,16 +85,84 @@
 	\begin{enumerate}
 	\item[a.]
 		\begin{enumerate}
-			\item[a.1]
-			\item[a.2]
-			\item[a.3]
+			\item[a.1] For this problem, I will prove that the data set $D$ is linearly separable if \textit{($a.1.1$) there exists a hyperplane that satisfies condition $(3)$ with $\delta = 0$}, and \textit{($a.1.2$) only if there exists the hyperplane}. Then I will consider the case \textit{$(a.1.3)$ that $\delta > 0$}.
+			\begin{enumerate}
+				\item[(a.1.1)] if hyperplane with $\delta=0$, then dataset $D$ is linear separable:
+				\begin{itemize}
+				\item For case $y_i = -1$, $\delta = 0$:
+					\begin{eqnarray}
+						y_i(\vec{w} \vec{x_i} + \theta) &&\geq 1 - \delta\\
+						-1 \cdot (\vec{w} \vec{x_i} + \theta) &&\geq 1 - 0\\
+						(\vec{w} \vec{x_i} + \theta) &&\leq -1\\
+						(\vec{w} \vec{x_i} + \theta) &&\leq 0\\
+					\end{eqnarray}
+				\item For case $y_i = 1$, $\delta = 0$:
+					\begin{eqnarray}
+						y_i(\vec{w} \vec{x_i} + \theta) &&\geq 1 - \delta\\
+						1 \cdot (\vec{w} \vec{x_i} + \theta) &&\geq 1 - 0\\
+						(\vec{w} \vec{x_i} + \theta) &&\geq 1\\
+						(\vec{w} \vec{x_i} + \theta) &&\geq 0\\
+					\end{eqnarray}
+				\end{itemize}
+				The result is consistent with condition $(1)$. Therefore, there exists linear separable dataset $D$ if there exists a hyperplane that satisfies condition $(3)$ with $\delta = 0$.
+				\item[(a.1.2)] if dataset $D$ is linear separable, then there exists hyperplane with $\delta = 0$:
+				We need to prove that:
+				\begin{eqnarray}
+					(\vec{w} \vec{x_i} + \theta) \geq 0 &&\Rightarrow y_i = 1\\
+					(\vec{w} \vec{x_i} + \theta) \leq 0 &&\Rightarrow y_i = -1 
+				\end{eqnarray}
+				We assume that there is a hyperplane that separates the dataset and touches a positive point. We define $D$ as the distance between this hyperplane and the closest negative point and $\vec{v}$ as vector. 
+				\begin{eqnarray}
+					D = \frac{|\vec{w}^T\cdot\vec{x_i} + \theta|}{\lVert\vec{w}\rVert}\\
+					(\vec{w} \vec{x_i} + \theta) = 0
+				\end{eqnarray}
+				We shift the hyperplane by $D/2$ along $\vec{v}$. The hyperlane is still linear separatble. After shifting $D/2$, $(\vec{w} \vec{x_i} + \theta) > 0$. Scaling the hyperplane by multiplying a factor in both sides. We get equation: $(\vec{w} \vec{x_i} + \theta) \geq 1$ and $(\vec{w} \vec{x_i} + \theta) \leq 1$. This is consistent with condition $(3)$ with $\delta = 0$.
+				\item[(a.1.3)] For case $\delta > 0$:
+				\begin{itemize}
+					\item if $\delta < 1$: we can use similar trick to prove that the dataset is linear separable.
+					\item if $\delta \geq 1$: the dataset is not separable.
+				\end{itemize}
+			\end{enumerate}
+			\item[a.2] The trivial solution is:
+			\begin{displaymath}
+				\vec{w} = [0_0, 0_1,...,0_n], \: \theta = 0, \: \delta = 0
+			\end{displaymath}
+			This is the optimal solution. $\theta = 0$ is the smallest $\theta$ that minimizes the $\delta$ with condition $1-\delta \geq 0$. To avoid this trivial solution, we add a positive constant to make sure there is a hyperplane. 
+			\item[a.3] By plugging in $\vec{x_1}$ and $\vec{x_2}$:
+			\begin{eqnarray}
+				\sum_{i=1}^{n} \vec{w_i} + \theta &&\geq 1\\
+				\sum_{i=1}^{n} -\vec{w_i} + \theta &&\leq 1
+			\end{eqnarray}
 		\end{enumerate}
 	\item[b.]
 		\begin{enumerate}
-			\item[b.1]
-			\item[b.2]
-			\item[b.3]
-			\item[b.4]
+			\item[b.1] \textbf{findLinearDiscriminant.m} \\
+			\includegraphics[width=13cm]{code_1} \\
+			\item[b.2] \textbf{hw1sample2d.txt} \\
+			\includegraphics[width=5cm]{data_1.png}\\
+			The dataset represents a monotone conjunction over two variables.\\\\
+			\textbf{plot2dSeparator.m}\\
+			\includegraphics[width=13cm]{code_3}\\\\
+			\textbf{two dimension separator:}\\
+			\includegraphics[width=13cm]{figure_1}\\
+			$\theta=-90.2115$, $\delta = -1.5632e-13$\\
+			$\vec{w} = [2.910,-2.050,0.178,190.520,0.140,-3.101,-2.953,-193.278,1.168,-8.894]$\\
+			In this solution, $\delta \approx 0$ shows that the dataset is linearly separable. Since $x_4$ and $x_8$ are significantly larger than others, the label is mostly depent on $x_4$ and $\neg x_8$. The hyperplane should be $x_4 \land \neg x_8$. In this solution, $\theta << 0$ guarantees a negative ouput when $\vec{w} \vec{x}$ is small.\\
+			\item[b.3] \textbf{computeLabel.m}\\
+			\includegraphics[width=13cm]{code_4}\\
+			\includegraphics[width=10cm]{figure_3}\\
+			($\delta=1.2619e-09$, $accuracyInTrain = 1$, $accuracyInTest = 1$)\\
+			Since $\delta \approx 0$, there exists a hyperplane that separates dataset. This set of features shows a perfect accuracy in both training dataset and test dataset.\\\\
+			\textbf{change the position from 1:10 to 3:10:}\\
+			This change will ignore the first two positions, so the obvious yellow cube in image above will be ignored.\\
+			\includegraphics[width=10cm]{figure_4}\\
+			($\delta=1.2179e-11$, $accuracyInTrain = 1$, $accuracyInTest = 0.7234$)\\
+			Since $\delta \approx 0$, the new hyperplane separates the dataset. The accuracy for training dataset is $1$, but the accuracy for test is only $0.7$. There is no obvious feature under this alphabet and position.\\
+			\item[b.4] \textbf{findLinearThreshold.m}\\
+			\includegraphics[width=13cm]{code_2}\\
+			\includegraphics[width=13cm]{figure_2}\\
+			($\delta_1=1.0658e-12$, $\delta_2=-2.2737e-13$, $\delta_3=-2.0009e-11$, $\delta_4=92.9650$)\\
+			Among those four hypothesis, only three hypothesis sucessfully separates the dataset, ($\delta_4 >> 0$). The lines which left end located between $0.8$ and $1$ separates the dataset exactly. Since $\delta_4 >> 0$, the most vertical line fails to separates the dataset. Other two lines are closer to positive or negative examples. We can infer that there are multiply lines that can separate the dataset.
 		\end{enumerate}
 	\end{enumerate}
 \end{enumerate}

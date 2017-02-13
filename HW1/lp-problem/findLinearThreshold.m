@@ -8,7 +8,15 @@ function [theta,delta] = findLinearThreshold(data,w)
 n = np1-1;
 
 % write your code here
-
+y = data(:, np1);
+features = data(:, 1:n);
+sign = zeros(m, n);
+for i = 1:m
+    sign(i,:) = y(i) * features(i,:);
+end
+c = [zeros(np1,1); 1];
+A = [sign, y, ones(m,1); zeros(1,np1), 1];
+b = [ones(m,1); 0];
 %% solve the linear program
 %adjust for matlab input: A*x <= b
 [t, z] = linprog(c, -A, -b, [], [], [w' -inf -inf], [w' inf inf]);
