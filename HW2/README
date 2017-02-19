@@ -1,0 +1,31 @@
+Name: Bangqi Wang
+Email: bwang34@illinois.edu
+
+
+Here is a brief description of the contents of this directory
+
+- README: This file
+
+- data: dataset and source code
+
+	- decision-trees:
+
+		- src: This contains the java sources. It contains three files:
+		   1. Id3.java: A modified version of Weka's Id3 code, which can be trained upto a limited depth.
+		   2. FeatureGenerator.java: An example feature generator that generates features in the ARFF format.
+		   3. WekaTester.java: Learners for decision trees, SGD, and decision stumps.
+		   4. Gradient.java: Implementation of SGD classifier.
+
+		- lib: This contains the weka.jar corresponding to Weka v3.6.3
+
+		- test.sh: A shell script that runs the feature generator and the decision tree trainer
+
+	- badges.example.arff: ARFF file for all examples
+
+	- badges.fold1.arff, badges.fold2.arff, badges.fold3.arff, badges.fold4.arff, badges.fold5.arff: ARFF files for fold1-5
+
+- Makefile: A makefile to compile the java code
+
+
+Runing './test.sh' under 'bwang34-hw2/data/decision-trees/' to excute program.
+
