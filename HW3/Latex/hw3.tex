@@ -1,0 +1,532 @@
+\input{cs446.tex}
+\usepackage{amsmath,amssymb,url,color}
+\sloppy
+\newcommand{\ignore}[1]{}
+
+\oddsidemargin 0in
+\evensidemargin 0in
+\textwidth 6.5in
+\topmargin -0.5in
+\textheight 9.0in
+
+\begin{document}
+
+\assignment{Spring 2017}{3}{February ${15}^{th}$, $2017$}{February ${27}^{th}$, $2017$}
+
+\begin{footnotesize}
+\begin{itemize}
+\item Feel free to talk to other members of the class in doing the homework.
+I am more concerned that you learn how to solve the problem than that you
+demonstrate that you solved it entirely on your own.  You should, however,
+write down your solution yourself.  Please try to keep the solution brief
+and clear.
+
+\item Please use Piazza first if you have questions about the homework.
+Also feel free to send us e-mails and come to office hours.
+
+\item Please, no handwritten solutions.  You will submit your solution
+report as a single pdf file. Follow the instructions in the ``What to submit''
+section for more details.
+
+\item A large portion of this assignment deals with programming the online
+learning algorithms as well as running experiments to see them in action.
+While we do provide some pieces of code, you are required to try and test
+several online learning algorithms by writing your own code.  While we
+encourage discussion within and outside of the class,
+\textcolor{red}{cheating and code copying is strictly prohibited.  Copied
+code will result in the entire assignment being discarded from grading at
+the very least.}
+
+\item The homework is due at $11$:$59$ PM on the due date.  We will be using
+Compass2g for collecting the homework assignments. Please submit an
+electronic copy via Compass (\texttt{http://compass2g.illinois.edu}). Please
+do NOT hand in a hard copy of your write-up.  Contact the TAs if you
+  face technical difficulties in submitting the assignment.
+\end{itemize}
+\end{footnotesize}
+
+\section*{Online Algorithm Comparison - 100 points}
+In this problem set, you will implement five online learning
+algorithms -- \emph{Perceptron} (with and without margin), 
+\emph{Winnow} (with and without margin), and \emph{AdaGrad}; 
+and experiment with them by comparing their performance on synthetic datasets. 
+We provide Python code that generates the synthetic dataset, but you 
+\emph{do not need to} code your algorithms in Python.
+
+In this problem set, you will get to see the impact of parameters on
+the performance of learning algorithms and, more importantly, the
+difference in the behavior of learning algorithms when the target
+function is sparse and dense. You will also assess the effect of noisy
+training data on the learning algorithms.
+
+First, you will generate examples that are labeled according to a
+simple $l$-of-$m$-of-$n$ boolean function. That is, the function is
+defined on instance space $\{0,1\}^n$, and there is
+a set of $m$ attributes such that an example is positive iff at least
+$l$ of these $m$ are active in the example. $l$, $m$ and $n$ define the
+hidden concept that your algorithms will attempt to learn.  The
+instance space is $\{0,1\}^n$ (that is, there are $n$ boolean features
+in the domain).  You will run experiments on several values of $l$,
+$m$, and $n$.
+
+To make sure you understand the above function, try to write it as a
+linear threshold function. This way, you will make sure that Winnow
+and Perceptron can represent this function (recall these algorithms
+learn linear separators). Also, notice that the $l$-of-$m$-of-$n$ concept
+class is a generalization of monotone conjunctions (when $l=m$) and of monotone
+disjunctions (when $l=1$).
+
+Your algorithm does not know the target function and does not know
+which are the relevant attributes or how many are relevant.  The goal
+is to evaluate these algorithms under several conditions and derive
+some conclusions on their relative advantages and disadvantages.
+
+\subsection*{Algorithms}
+
+You are going to implement five online learning algorithms.  Notice that
+they are essentially the same algorithm, only that their update rules are
+different.
+
+We will prescribe the weight initialization and options for the
+parameter(s) for each algorithm, and you should determine the best
+parameters for each algorithm via tuning on a subset of training
+data. More details on this in the {\bf Parameter Tuning} section.
+
+In all the algorithms described below, labeled examples are denoted by
+$(x,y)$ where $x \in \{0,1\}^n$ and $y \in \{-1,1\}$. In all cases,
+your prediction is given by
+
+\begin{align*}
+y=sign(w^\intercal x + \theta)
+\end{align*}
+
+
+\begin{enumerate}
+\item {\bf Perceptron}: The simplest version of the Perceptron
+  Algorithm. In this version, an update will be performed on the
+  example $(x,y)$ if $y(w^\intercal x + \theta) \leq 0$.
+    
+  There are two things about the Perceptron algorithm that should be
+  noted.
+
+  {\bf First}, the Perceptron algorithm needs to learn both the bias
+  term $\theta$ and the weight vector $w$. When the Perceptron
+  algorithm makes a mistake on the example $(x,y)$, both $w$ and
+  $\theta$ will be updated in the following way: \begin{eqnarray*}
+  w_{\text{new}} & \leftarrow & w + \eta y
+  x \\ \text{and} \quad \theta_{\text{new}} & \leftarrow & \theta
+  + \eta y \end{eqnarray*} where $\eta$ is the learning rate. See the
+  lecture notes for more information.
+
+  {\bf Second} (and more suprisingly), if we assume that the order of the
+  examples presented to the algorithm is fixed, and we initialize
+  $\begin{bmatrix} w & \theta \end{bmatrix} $ with a zero vector and
+  learn $w$ and $\theta$ together, then the learning rate $\eta$, in
+  fact, does not have any effect\footnote{In fact you can show that, if $w_1$ and
+  $\theta_1$ is the output of the Perceptron algorithm with learning
+  rate $\eta_1$, then $w_1/\eta_1$ and $\theta_1/\eta_1$
+  will be the result of the Perceptron with learning rate 1 (note that
+  these two hyperplanes give identical predictions).}.
+  
+  {\bf Initialization}: $w^\intercal=\{0,0,\cdots,0\},\theta=0$
+
+  {\bf Parameters}: Given the second fact above, we can fix $\eta=1$. So there are no parameters to tune.
+
+\item {\bf Perceptron with margin}: This algorithm is similar to Perceptron;
+  but in this algorithm, an update will be performed on the example
+  $(x,y)$ if $y(w^\intercal x + \theta) < \gamma$, where $\gamma$ is
+  an additional {\bf positive} parameter specified by the user. Note
+  that this algorithm sometimes updates the weight vector even when
+  the weight vector does not make a mistake on the current example.
+
+  {\bf Parameters:} learning rate $\eta$ (to tune), fixed margin parameter $\gamma$=1.
+
+  Given that $\gamma>0$, using a different learning rate $\eta$ will produce
+  a different weight vector. The best value of $\gamma$ and the best value
+  of $\eta$ are closely related given that you can scale $\gamma$ and
+  $\eta$.
+
+  {\bf Initialization}: $w^\intercal=\{0,0,\cdots,0\},\theta=0$
+
+  {\bf Parameter Recommendation}: Choose $\eta \in \{1.5,0.25,0.03,0.005,0.001\}$.
+
+\item {\bf Winnow}: The simplest version of Winnow. Notice that all the target functions we deal with are monotone functions, so we are simplifying here and using the simplest version of Winnow.
+
+When the Winnow algorithm makes a mistake on the example $(x, y)$, $w$
+will be updated in the following way:
+\begin{align*}
+w_{t+1,i} \leftarrow w_{t,i} \alpha^{yx_i}
+\end{align*}
+where $\alpha$ is promotion/demotion parameter and $w_{t,i}$ is the
+$i$th component of the weight vector after $t$ mistakes.
+
+  {\bf Parameters}: Promotion/demotion parameter $\alpha$
+  
+  {\bf Initialization}: $w^\intercal=\{1,1,\cdots,1\},\theta=-n$ ($\theta$ is fixed here, we {\bf do not} update it)
+
+  {\bf Parameter Recommendation}: Choose $\alpha \in \{1.1,1.01,1.005,1.0005,1.0001\}$.
+
+
+\item {\bf Winnow with margin}: This algorithm is similar to Winnow; but in
+  this algorithm, an update will be performed on the example $(x,y)$
+  if $y(w^\intercal x + \theta) < \gamma$, where $\gamma$ is an
+  additional {\bf positive} parameter specified by the user. Note
+  that, just like perceptron with margin, this algorithm sometimes
+  updates the weight vector even when the weight vector does not make
+  a mistake on the current example.
+
+  {\bf Parameters:} Promotion/demotion parameter $\alpha$, margin parameter
+  $\gamma$.
+
+  {\bf Initialization}: $w^\intercal=\{1,1,\cdots,1\},\theta=-n$ ($\theta$ is fixed here, we {\bf do not} update it)
+
+  {\bf Parameter Recommendation}: Choose $\alpha \in \{1.1,1.01,1.005,1.0005,1.0001\}$ and $\gamma \in \{2.0,0.3,0.04,0.006,0.001\}$.
+
+\item {\bf AdaGrad}: AdaGrad adapts the learning rate based on historical information, so that frequently changing features get smaller learning rates and stable features get higher ones. Note that here we have different learning rates for different features. We will use the hinge loss:
+\begin{align*}
+Q((x,y),w) = \max(0,1-y(w^\intercal x+\theta)).
+\end{align*}
+
+Since we update both $w$ and $\theta$, we use $g_t$ to denote the gradient vector of $Q$ on the $(n + 1)$ dimensional vector $(w, \theta)$ at iteration $t$.
+
+The per-feature notation at iteration $t$ is: $g_{t,j}$ denotes the jth component of $g_t$ (with respect to $w$) for $j = 1, \cdots, n$ and $g_{t,n+1}$ denotes the gradient with respect to $\theta$.
+
+In order to write down the update rule we first take the gradient of $Q$ with respect to the weight vector $(w_t, \theta_t)$,
+
+\begin{align*}
+g_t=
+\begin{cases}
+0 & \text{if $y(w_t^\intercal x + \theta) > 1$} \\
+-y(x,1) & otherwise
+\end{cases}
+\end{align*}
+That is, for the first n features, that gradient is $-yx$, and for $\theta$, it is always $-y$.
+
+Then, for each feature $j$ $(j = 1, ..., n + 1)$ we keep the sum of the gradients' squares:
+\begin{align*}
+G_{t,j} = \sum_{k=1}^t g^2_{k,j}
+\end{align*}
+and the update rule is
+\begin{align*}
+w_{t+1,j} \leftarrow w_{t,j} -\eta g_{t,j}/(G_{t,j})^{1/2}
+\end{align*}
+By substituting $g_t$ into the update rule above, we get the final update rule:
+\begin{align*}
+w_{t+1,j} =
+\begin{cases}
+w_{t,j} & \text{if $y(w_t^\intercal x + \theta) > 1$} \\
+w_{t,j}+\eta yx_j/(G_{t,j})^{\frac{1}{2}} & otherwise
+\end{cases}
+\end{align*}
+
+where for all $t$ we have $x_{n+1}=1$.
+
+We can see that AdaGrad with hinge loss updates the weight vector only
+when $y(w^\intercal x+\theta) \le 1$. The learning rate, though, is changing
+over time, since $G_{t,j}$ is time-varying.
+
+You may wonder why there is no AdaGrad with Margin: note that AdaGrad
+updates $w$ and $\theta$ only when $y(w^\intercal x+\theta) \le 1$ which is
+already a version of the Perceptron with Margin 1.
+
+  {\bf Parameters}: $\eta$
+
+  {\bf Initialization}: $w^\intercal=\{0,0,\cdots,0\},\theta=0$
+
+  {\bf Parameter Recommendation}: Choose $\eta \in \{1.5,0.25,0.03,0.005,0.001\}$.
+
+  {\bf Warning}: If you implement \emph{AdaGrad} in MATLAB, make sure
+that your denominator is non-zero. MATLAB may not give special warning
+on this.
+
+\end{enumerate}
+
+{\bf Important:} Note that some of the above algorithms
+update the weight vector even when the weight vector does not make a
+mistake on the current example.  In some of the following experiments,
+you are asked to calculate how many mistakes an online algorithm makes
+during learning.  In this problem set, the definition of the number of
+mistakes is as follows: for every new example $(x,y)$, if
+$y(w^\intercal x + \theta) \leq 0$, the number of mistakes will be
+increased by $1$. So, the number of mistakes an algorithm makes does
+not necessary equal the number of updates it makes.
+
+\subsection*{Data generation}
+This section explains how the data to be used is generated. We
+recommend that you use the python file {\bf gen.py} to generate each of
+the data sets you will need. The input parameters of this data
+generator include $l$,$m$,$n$, the number of instances, and a $\{True,
+False\}$ variable \emph{noise}. When \emph{noise} is set $False$, it will
+produce {\bf clean} data. Otherwise it will produce noisy data. (Make
+sure you place {\bf add\_noise.py} with {\bf gen.py} in the same
+workspace. See Problem 3 for more details.) Given values of $l, m, n$
+and $noise$ set $False$, the following call generates a clean data set of
+50,000 labeled examples of dimensionality n in the following way (y and x are Numpy arrays)
+
+\begin{verbatim}
+from gen import gen                                                                                                                                
+(y, x) = gen(l, m, n, 50000, False) 
+\end{verbatim}
+
+For each set of examples generated, half will be positive and half
+will be negative. Without loss of generality, we can assume that the
+first $m$ attributes are the relevant attributes, and generate the
+data this way.  (Important: Your learning algorithm does NOT know
+that.)  Each example is generated as follows:
+
+\begin{itemize}
+\item For each positive example, pick randomly and uniformly $l$
+  attributes from among $x_1, \ldots, x_m$ and set them to 1. Set the
+  other $m-l$ attributes to 0. Set the rest of the $n-m$ attributes to
+  $1$ uniformly with a probability of $0.5$.
+
+\item For each negative example, pick randomly and uniformly $l-2$
+  attributes from among $x_1, \ldots, x_m$ and set them to 1. Set the
+  other $m-l+2$ attributes to 0. Set the rest of the $n-m$ attributes
+  to $1$ uniformly with a probability of $0.5$.
+\end{itemize}
+
+Of course, you should not incorporate this knowledge of the target
+function into your learning algorithms. Note that in this experiment,
+all of the positive examples have $l$ active attributes among the
+first $m$ attributes and all of the negative examples have $l-2$
+active attributes among the first $m$ attributes.
+
+\subsection*{Parameter Tuning}
+One of the goals of this this homework is understanding the importance
+of parameters in the success of a machine learning algorithm. We will
+ask you to tune and report the best parameter set you chose for each
+setting. Let’s assume you have the training data set and the
+algorithm. We now describe the procedure you will run to tune the
+parameters. As will be clear below, you will run this procedure and
+tune the parameters for each training set you will use in the
+experiments below.
+
+\subsubsection*{Parameter Tuning Procedure}
+\begin{itemize}
+
+\item Generate two distinct subsamples of the training data, each consisting of 
+10\% of the data set; denote these data sets $D_1$ and $D_2$
+respectively. For each set of parameter values that we provided along
+with the algorithm, train your algorithm on $D_1$ by running the
+algorithm 20 times over the data. Then, evaluate the resulting model
+on $D_2$ and record the accuracy.
+
+\item Choose the set of parameters that results in the highest accuracy on $D_2$.
+\end{itemize}
+Note that if you have two parameters, $a$ and $b$, each with 5 options
+for values, you have $5 \times 5 = 25$ sets of parameters to
+experiment with.
+
+\subsection*{Experiments}
+
+Note: For the following experiments, you will generate data sets for
+multiple configurations of $l$, $m$, and $n$ parameters. For each
+configuration, make sure to use the \textbf{same} training data and
+the \textbf{same} testing data across all learning algorithms so that
+the results can be compared across algorithms.
+
+\begin{enumerate}
+\item {\bf [20 points] Number of examples versus number of mistakes}
+
+First you will evaluate the online learning algorithms with two
+concept parameter configurations: (a)~$l=10$, $m=100$, $n=500$, and
+(b)~$l=10$, $m=100$, $n=1000$.
+
+Your experiments should consist of the following steps:
+
+\begin{enumerate}
+\item You should generate a {\bf clean} data set of 50,000 examples for each of the two given l, m, and n configuration.
+
+\item In each case run the tuning procedure described above and record your optimal
+parameters.
+
+  \begin{center}
+    \begin{tabular}{|p{3.0cm}|p{2.2cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
+      \hline
+      Algorithm               &  Parameters & Dataset n=500 & Dataset n=1000\\\hline\hline
+      Perceptron              &             &               &      \\\hline
+      Perceptron w/margin     &             &               &      \\\hline
+      Winnow                  &             &               &      \\\hline
+      Winnow w/margin         &             &               &      \\\hline
+      AdaGrad                 &             &               &      \\\hline
+    \end{tabular}
+  \end{center}
+
+\item For each of the five algorithms, run it with the best parameter setting over each training set once. Keep track of the number of mistakes (W) the algorithm makes.
+
+\item Plot the cumulative number of mistakes made (W) on N examples ($\le 50,000$) as a function of N (i.e. x-axis is N and y-axis is W)\footnote{If you are running out of memory, you may consider plotting the cumulative error at every 100 examples seen instead.}
+\end{enumerate}
+
+For each of the two datasets (n=500 and n=1000), plot the curves of
+all five algorithms in one graph. Therefore, you should have two
+graphs (one for each dataset) with five curves on each. Be sure to
+label your graphs clearly!
+
+{\bf Comment: }If you are getting results that seem to be unexpected
+after tweaking the algorithm parameters, try increasing the number of
+examples.  If you choose to do so, don't forget to document the
+attempt as well.  It is alright to have an additional graph or two as
+a part of the documentation.
+
+
+\item {\bf [35 points] Learning curves of online learning algorithms}
+
+The second experiment is a learning curve experiment for all the
+algorithms.  Fix $l=10$, $m=20$.  You will vary $n$, the number of
+variables, from $n=40$ to $n=200$ in increments of $40$.  Notice that 
+by increasing the value of $n$, you are making the function sparse.  
+For each of the $5$ different functions, you first generate a dataset with
+$50,000$ examples.  Tune the parameters of each algorithm following
+the instructions in the previous section. Note that you have five
+different training sets (for different values of $n$), so you need to tune each algorithm for each
+of these separately. Like before, record the chosen parameters in the
+following table:
+
+  \begin{center}
+    \begin{tabular}{|p{3.0cm}|p{2.2cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+      \hline
+      Algorithm             &  Parameters & n=40 & n=80 & n=120 & n=160 & n=200\\\hline\hline
+      Perceptron            &             &      &      &       &       &      \\\hline
+      Perceptron w/margin   &             &      &      &       &       &      \\\hline
+      Winnow                &             &      &      &       &       &      \\\hline
+      Winnow w/margin       &             &      &      &       &       &      \\\hline
+      AdaGrad               &             &      &      &       &       &      \\\hline
+    \end{tabular}
+  \end{center}
+  
+Then, run each algorithm in the following fashion:
+\begin{enumerate}
+\item Present an example to the learning algorithm.
+\item Update the hypothesis if needed; keep track of the number $W$ of
+mistakes the algorithm makes.
+\end{enumerate}
+Keep doing this, until you get a sequence of $R$ examples on which the
+algorithm makes no mistakes. Record $W$ at this point and stop.
+
+For each algorithm, plot a curve of $W$ (the number of mistakes you
+have made before the algorithm stops) as a function of $n$ on one
+graph. Try this with convergence criterion $R = 1000$. It is possible
+that it will take many examples to converge\footnote{If you are
+running into memory problems, make sure you are not storing extraneous
+information, like a cumulative count of errors for each example seen.}
+; you can do it by cycling through the training data you
+generated multiple times. If you are running into convergence problems
+(e.g., no convergence after cycling through the data more than 10 times), try to
+reduce $R$, but also think analytically about the choice of parameters
+and initialization for the algorithms. Comment on the various
+learning curves you see as part of your report.
+
+\item {\bf [45 points] Use online learning algorithms as batch learning algorithms}
+
+  The third experiment involves running all learning algorithms in the
+  batch setting with noisy training data. In the batch setting, you will 
+  still make weight updates per mistake, but will loop over the 
+  entire training data for multiple training cycles. The steps of this experiment
+  are as follows:
+
+\begin{enumerate}
+  \item {\bf [Data Generation]} For each configuration (l, m, and n),
+  generate a {\bf noisy} training data set with 50,000 examples and a
+  {\bf clean} test data set with 10,000 examples.
+\begin{verbatim}
+(train_y,train_x) = gen(l,m,n,50000,True);
+(test_y,test_x) = gen(l,m,n,10000,False);
+\end{verbatim}
+
+In the noisy data set, the label y is flipped with probability 0.05
+and each attribute is flipped with probability 0.001. The parameters
+0.05 and 0.001 are fixed in this experiment. We {\bf do not} add any noise
+in the test data.
+
+You will run the experiment with the following three different configurations.
+\begin{itemize}
+\item P1: l = 10, m = 100, n = 1000.
+\item P2: l = 10, m = 500, n = 1000.
+\item P3: l = 10, m = 1000, n = 1000.
+\end{itemize}
+
+\item {\bf [Parameter Tuning]} Use the Tuning Procedure defined earlier on the noisy
+training data generated. Record the best parameters (three sets of
+parameters for each algorithm, one for each training set).
+
+Since we are running the online algorithms in a batch process, there
+should be, in principle, another tunable parameter: the {\em number of
+training cycles} over the data that an algorithm needs to reach a
+certain performance. We will not do it here, and just assume that in
+all the experiments below you will cycle through the data {\bf 20}
+times.
+
+\item {\bf [Training]} For each algorithm, train the model using 100\%
+  of the noisy training data with the best parameters selected in the
+  previous step. As suggested above, run through the training data 20
+  times. (If you think that this number of cycles is not enough to
+  learn a good model you can cycle through the data more times; in
+  this case, record the number of cycles you used and report it.)
+
+\item {\bf [Evaluation]} Evaluate your model on the test data. Report the accuracy produced by all the online learning algorithms. (That is, report the number of mistakes made on the test data, divided by 10,000).
+\end{enumerate}
+
+Recall that, for each configuration $(l, m, n)$, you have generated a
+training set (with noise) and a corresponding the test set (without noise), that you
+will use to evaluate the performance of the learned model. Note also
+that, for each configuration, you should use the {\bf same} training data
+and the {\bf same} test data for all the five learning algorithms. You may
+want to use the {\bf numpy.save} and {\bf numpy.load} commands to save the
+datasets you have created to disk and load them back.
+
+\newpage
+Use the table below to report your tuned parameters and resulting accuracy.
+
+\begin{center}
+  \begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+ Algorithm      &  \multicolumn{2}{c|}{m=100} & \multicolumn{2}{c|}{m=500} & \multicolumn{2}{c|}{m=1000}\\\hline\hline
+ & acc. & params. & acc. & params. & acc. & params.\\\hline
+ Perceptron     & & & & & &\\\hline
+ Perceptron w/margin & & & & & &\\\hline
+ Winnow              & & & & & &\\\hline
+ Winnow w/margin     & & & & & &\\\hline
+ AdaGrad & & & & & &\\\hline
+\end{tabular}
+\end{center}
+  Write down your observations about the resulting performance of the algorithms.
+  Be sure to discuss how the results vary from the previous experiments?
+
+\item {\bf [10 points] Bonus:} In our experiments so far, we have been plotting the  misclassification error (0-1 loss) for each of the algorithms. Consider the \textbf{AdaGrad} algorithm, where we learn a linear separator by minimizing a {\em surrogate} loss function -- Hinge loss instead of directly minimizing the 0-1 loss. 
+In this problem, we explore the relationship between the 0-1 loss and the {\em surrogate} loss function. 
+
+We will use the \textbf{AdaGrad} update rule which was derived using \textbf{Hinge Loss} as our loss function. Run the algorithm for 50 training rounds using the batch setting of Problem 3. At the end of each round, record the misclassification error and the Hinge loss over the dataset for that round. Generate two plots: misclassification error as a function of the number of training rounds, Hinge loss (over the dataset) as a function of the number of training rounds. 
+
+We will use a \textbf{noisy} dataset consisting of 10000 instances. Use the configuration where $l = 10$, $m = 20$ and $n = 40$ (from Problem 2). Use the procedure \textbf{gen.py} to generate the training data as follows:
+
+\begin{verbatim}
+(data_y,data_x) = gen(l,m,n,10000,True);
+\end{verbatim}
+
+Recall that, once you generate the data, run the training procedure for 50 rounds and 
+obtain the required plots for misclassification error against the number of training rounds and risk (loss over the dataset) against the number of training rounds. You can re-use the parameters obtained in Problem 2. Write down your observations about the two plots obtained. Feel free to experiment with other values of $n$ and plot them in the same graphs.
+\end{enumerate}
+
+\newpage
+\subsection*{What to submit}
+\begin{itemize}
+
+\item A detailed report. Discuss differences you see in the
+performance of the algorithms across target functions and try to
+explain why. Make sure you discuss each of the plots, your
+observations, and conclusions.
+
+\item Three graphs in total, two from the first experiment (2 different concept parameter configurations) and one from the second experiment (changing the
+number of variables n, but keeping l and m fixed), each clearly
+labeled. Include the graphs in the report. If you attempt the bonus problem, you 
+should have two additional graphs to submit.
+
+\item One table for each of the first two experiments; three tables for the third experiment, from P1 through P3. Include the tables in the report.
+
+\item Your source code. This should include the algorithm implementation and the code that runs the experiments. You {\bf must} include a README, documenting how someone should run your code.
+\end{itemize}
+{\bf Comment:} You are highly encouraged to start on this early because the
+experiments and graphs may take some time to generate.
+
+\end{document}

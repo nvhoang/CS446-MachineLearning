@@ -1,0 +1,14 @@
+PWD /Users/wangbangqi/Desktop/[8]-Senior/CS446-MachineLearning/HW3
+INPUT /usr/local/texlive/2015/texmf.cnf
+INPUT /usr/local/texlive/2015/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2015/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT bwang34_hw3.tex
+OUTPUT bwang34_hw3.log
+INPUT /usr/local/texlive/2015/texmf-dist/fonts/map/fontname/texfonts.map
+INPUT /usr/local/texlive/2015/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT bwang34_hw3.aux
+INPUT bwang34_hw3.aux
+OUTPUT bwang34_hw3.aux
+INPUT bwang34_hw3.aux
+INPUT cs446.tex
+INPUT cs446.tex

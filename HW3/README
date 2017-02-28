@@ -1,0 +1,36 @@
+Name: Bangqi Wang
+Email: bwang34@illinois.edu
+
+
+  ///////////////////////////////////////////|
+ // CS446: Machine Learning - Spring 2017 // /
+/////////////////////////////////////////// /
+|_________________________________________|/
+
+
+Here is a brief description of the contents of this directory
+
+- README: This file
+
+- bwang34_hw3.pdf: homework report submission
+
+- src: source code for program
+	
+	- gen.py: provided file to generate dataset.
+	- add_noise.py: provided file to add noise to dataset.
+	- main.py: main file for this homework
+	- perceptron.py: class of perceptron
+	- perceptron_margin.py: class of perceptron with margin
+	- winnow.py: class of winnow
+	- winnow_margin.py: class of winnow with margin
+	- adagrad.py: class of adagrad
+
+- Latex: source code for Latex
+
+- hw3-document.pdf: homework document
+
+
+Running: =================================================================
+	- Uncomment the function in main file.
+	- Runing 'python main.py' under 'bwang34-hw3/src/' to excute program.
+
