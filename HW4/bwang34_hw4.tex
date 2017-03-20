@@ -1,0 +1,189 @@
+\input{cs446.tex}
+\usepackage{amsmath}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithm
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{graphicx}
+\usepackage{listings}
+\graphicspath{ {.} }
+
+\DeclareMathOperator{\proj}{proj}
+\newcommand{\vctproj}[2][]{\proj_{\vec{#1}}\vec{#2}}
+
+\sloppy
+\newcommand{\ignore}[1]{}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bw}{{\bf w}}
+
+\newcommand{\bb}[1]{{\bf #1}}
+\newcommand{\pp}{\noindent}
+\newcommand{\ov}{\overline}
+\renewcommand{\labelitemii}{\tiny$\circ$}
+
+\oddsidemargin 0in
+\evensidemargin 0in
+\textwidth 6.5in
+\topmargin -0.5in
+\textheight 9.0in
+
+\begin{document}
+
+\solution{Bangqi Wang}{\today}{4}{Spring 2017}
+% Fill in the above, for example, as follows:
+% \solution{Joe Smith}{\today}{1}{Fall 2012}
+
+\pagestyle{myheadings}  % Leave this command alone
+
+\begin{enumerate}
+\item[1.] Answer to problem 1
+	\begin{enumerate}
+	\item[a.] The algorithm needs to find the edges between negative data and positive data.
+		\begin{itemize}
+		\item All Positive: find the smallest and the largest points.
+		\item All Negative: find two points that has largest distance between them.
+		\item Negative $\&$ Positive: find the smallest and the largest positive points.
+		\end{itemize}
+		\begin{algorithm}
+		\caption{Pseudocode:}\label{euclid}
+		\begin{algorithmic}[1]
+		\Procedure{MyProcedure}{}
+		\State $\textit{queue} \gets Priority Queue()$
+		\State $\textit{hasPositive} \gets False$
+		\State $\textit{left, right} \gets Null, Null$
+		\For{\texttt{each point \textit{$P$} in training set}}
+			\State \textit{queue}.push($(distance, P)$)
+			\If {\texttt{\textit{$P$} is $'+'$}}
+				\State $\textit{hasPositive} \gets True$
+			\EndIf
+      	\EndFor
+		\If {\texttt{\textit{$hasPositive$} is $True$}}
+			\State \textit{left} $\gets$ smallest distance $d_{left}$ among positive points
+			\State \textit{right} $\gets$ largest distance $d_{right}$ among positive points
+		\EndIf
+		\If {\texttt{\textit{$hasPositive$} is $False$}}
+			\State \textit{left} $\gets$ smaller distance $d_{left}$ of two negative points with largest distance between.
+			\State \textit{right} $\gets$ larger distance $d_{right}$ of two negative points with largest distance between.
+		\EndIf
+		\State \textit{$r_1, r_2$} $\gets$ $left, right$
+      	\State \textbf{return} \textit{$r_1,r_2$}
+		\EndProcedure
+		\end{algorithmic}
+		\end{algorithm}
+	\item[b.]
+		\begin{enumerate}
+		\item[i.] The hypothesis will only make mistakes on positive examples because it is tightest boundary for positive. Negative may never beyond the boundary but there may exist new positive that widen the boundary and make the boundary closer to the true boudnary.
+		\item[ii.] 
+		\[ Pr_{each} = 1 - \epsilon \]
+		\[ Pr_{m} = (1 - \epsilon)^m \]
+		\end{enumerate}
+	\item[c.]
+		\[ Pr_{m} = (1 - \epsilon)^m < \delta \]
+		\[ Pr_{m} = (e^{-\epsilon})^m < \delta \]
+		\[ Pr_{m} = e^{-\epsilon m} < \delta \]
+		\[ -\epsilon m > log(\delta)\]
+		\[ \epsilon m > log(\frac{1}{\delta}) \]
+		\[ m > \frac{1}{\epsilon} * log(\frac{1}{\delta}) \]
+	\item[d.] The VC Dimension is $1$. There is an complexity bound with finite VC dimension. $m < \frac{1}{\epsilon} (8log \frac{13}{\epsilon} + 4log\frac{2}{\delta})$. The bound we found is tighter than the this bound using VC dimension.
+	\end{enumerate}
+\item[2.] Answer to problem 2
+	\begin{enumerate}
+	\item[a.] The VC Dimension is $3$. The function $ax^2 + bx + c$ is a parabola. The parabola can only split the axis into at most $3$ parts. In this situation, there is no way to shatter data with more than $3$ parts, such as $'+,-,+,-'$ or $'-,+,-,+'$.
+	\end{enumerate}
+\item[3.] Answer to problem 3
+	\begin{enumerate}
+	\item[a.] From lecture note
+		\begin{itemize} 
+		\item weight vector $w = \sum\nolimits_{1,m} r \alpha_i y_i x^i$ 
+		\item $\alpha_i$ is the mistake made on $x^i$
+		\item $f(x) = sgn(\sum\nolimits_{z \in M} S(z)K(x,z))$
+		\item where $K(x,z) = \sum\limits_{i \in I} t_i(z)t_i(x)$, and $S(z) = \pm 1$
+		\end{itemize}
+	\item[b.]
+		\begin{equation*}
+	      K(\vec{\bb{x}},\vec{\bb{z}}) = (\vec{\bb{x}}^T\vec{\bb{z}})^3 
+	                                      + 49(\vec{\bb{x}}^T\vec{\bb{z}} + 4)^2 
+	                                      + 64 \vec{\bb{x}}^T\vec{\bb{z}}.
+	    \end{equation*}
+	    \begin{equation*}
+	      K(\vec{\bb{x}},\vec{\bb{z}}) = (\vec{\bb{x}}^T\vec{\bb{z}})^3 
+	                                      + 49(\vec{\bb{x}}^T\vec{\bb{z}})^2 
+	                                      + 456 \vec{\bb{x}}^T\vec{\bb{z}}
+	                                      + 784
+	    \end{equation*}
+	    Since $\vec{\bb{x}}^T\vec{\bb{z}}$ is a valid kernel. So, the polynomials of $\vec{\bb{x}}^T\vec{\bb{z}}$ is still a valid kernel.
+	\item[c.]
+		$K(\bb{x}, \bb{z}) = \sum_{c \in C} c(\bb{x}) c(\bb{z})$, where $C$ is combination $C_{m}^k$. It will take linear time $O(n)$ to find k features that are positive in both $x$ and $z$. Traversing through $x$ and $z$ needs linear time $O(n)$.
+	\end{enumerate}
+\item[4.] Answer to problem 4
+	\begin{enumerate}
+	\item[a.]
+		\begin{enumerate}
+		\item[1.] $w \: = \: <-\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{2}>$, $\theta \: = \: 0$ 
+		\item[2.] $w \: = \: <-\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{2}>$, $\theta \: = \: 0$
+		\item[3.] SVM optimization will make the margin between positive and negative as large as possible. Usually it will draw two parallel lines that will pass the closest positive point and the closest negative point. Then draw the middle line of those two lines. This line is perpendicular bisector of those two points.
+		\end{enumerate}
+	\item[b.]
+		\begin{enumerate}
+		\item[1.] $<-2, 0>$, $<0, 2>$
+		\item[2.] $\alpha = \{\frac{\sqrt{2}}{4}, -\frac{\sqrt{2}}{4}\}$
+		\item[3.] $Objective function value = \frac{1}{2}||\mathbf{w}||^2 = \frac{1}{2} \times \sqrt{(\frac{\sqrt{2}}{2})^2 + (\frac{\sqrt{2}}{2})^2} = \frac{1}{2}$
+		\end{enumerate}
+	\item[c.] Slack variable $\xi$ allows some instances to fall off the margin, but penalize them. $C$ trades-off margin width and misclassification. 
+		\begin{itemize}
+		\item $C \to 0$: the optimization problem gives the hyperplan found in $(a)-2$.
+		\item $C \to 1$: get the hyperplan that balance the margin and hinge loss.
+		\item $C \to \infty$: get the hyperplan closer to hard-margin solution.
+		\end{itemize}
+	\end{enumerate}
+\item[5.] Answer to problem 5 \\
+		\begin{center}
+  		\begin{tabular}{|c|c||c|c|c|c||c|c|c|c|}
+      		\hline
+      		& & \multicolumn{4}{c||}{Hypothesis 1}
+  			& \multicolumn{4}{c|}{Hypothesis 2} \\
+      		\cline{3-10}
+      		{\em i} & Label & $D_0$ & $f_1 \equiv $ & $f_2 \equiv $ & $h_1\equiv$ & $D_1$ &  $f_1 \equiv $ & $f_2 \equiv $ & $h_2 \equiv $ \\
+      			& & & [$x > 2$] & [$y > 4$] & [$x > 2$] & & [$x > 9$] & [$y > 11$] & [$y > 11$] \\
+
+		      \tiny{(1)} & \tiny{(2)} & \tiny{(3)} & \tiny{(4)} &  \tiny{(5)} & \tiny{(6)} & \tiny{(7)} & \tiny{(8)} & \tiny{(9)} & \tiny{(10)}\\
+		      \hline \hline
+		      {\em 1} & $-$ & $\frac{1}{10}$ & $-$ & $+$ & $-$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 2} & $-$ & $\frac{1}{10}$ & $-$ & $-$ & $-$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 3} & $+$ & $\frac{1}{10}$ & $+$ & $+$ & $+$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 4} & $-$ & $\frac{1}{10}$ & $-$ & $-$ & $-$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 5} & $-$ & $\frac{1}{10}$ & $-$ & $+$ & $-$ & $\frac{1}{16}$ & $-$ & $+$ & $+$ \\
+		      \hline
+		      {\em 6} & $-$ & $\frac{1}{10}$ & $+$ & $+$ & $+$ & $\frac{1}{4}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 7} & $+$ & $\frac{1}{10}$ & $+$ & $+$ & $+$ & $\frac{1}{16}$ & $+$ & $-$ & $-$ \\
+		      \hline
+		      {\em 8} & $-$ & $\frac{1}{10}$ & $-$ & $-$ & $-$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+		      {\em 9} & $+$ & $\frac{1}{10}$ & $-$ & $+$ & $-$ & $\frac{1}{4}$ & $-$ & $+$ & $+$ \\
+		      \hline
+		      {\em 10} & $+$ & $\frac{1}{10}$ & $+$ & $+$ & $+$ & $\frac{1}{16}$ & $-$ & $-$ & $-$ \\
+		      \hline
+    	\end{tabular}
+    	\end{center}
+	\begin{enumerate}
+	\item[a.] All elements have same weights $\frac{1}{10}$.
+	\item[b.] The best hypothesis is $x > 2$. $\epsilon_0 = 0.2$, $\alpha_0 = \frac{1}{2} ln(\frac{1-\epsilon_0}{\epsilon_0}) = 0.69$
+	\item[c.] For weights of $D_1$:
+		\begin{itemize}
+		\item $D_{t+1} = D_t / (z_t \times e^{-\alpha_t y_i h_t(x_i)})$, where $z_0 = \sum\limits_{i}D_0(i)e^{-\alpha_0 y_i h_0(x_i)} = 0.8$ 
+		\item $D_{1_{correct}} = D_0 e^{\alpha_0} / z_0 = \frac{1}{16}$
+		\item $D_{1_{error}} = D_0 e^{-\alpha_0} / z_0 = \frac{1}{4}$\\
+		\end{itemize}
+	\item[d.] Final hypothesis:
+		\begin{itemize}
+		\item $\epsilon_1 = 0.25$, $\alpha_1 = \frac{1}{2} ln(\frac{1-\epsilon_1}{\epsilon_1}) = 0.55$
+		\item $H_{final}(x) = sgn(\sum\limits_{t} \alpha_t h_t (x)) = sgn(0.69 \cdot [x > 2] + 0.55 \cdot [y > 11])$
+		\end{itemize}
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}
+
