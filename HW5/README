@@ -1,0 +1,34 @@
+Name: Bangqi Wang
+Email: bwang34@illinois.edu
+
+
+  ///////////////////////////////////////////|
+ // CS446: Machine Learning - Spring 2017 // /
+/////////////////////////////////////////// /
+|_________________________________________|/
+
+Here is a brief description of the contents of this directory
+
+- README: This file
+
+- bwang34_hw5.pdf: homework report submission
+
+- src: source code for program
+	
+	- sample_run.py: main file for entire program
+	- data_loader.py: loader that load data
+	- NN.py: implementation for Neural Network
+	- NN_function.py: implementation for Neural Network
+	- perceptron.py: implementation for Perceptron
+	- result_circles.csv: results for CIRCLES
+	- result_mnist.csv: results for MNIST
+
+- Latex: source code for Latex
+
+- hw5-document.pdf: homework document
+
+
+Running: =================================================================
+	- Open sample_run.py and uncomment the model
+	- Runing 'python sample_run.py' under 'bwang34-hw5/src/' to excute program.
+

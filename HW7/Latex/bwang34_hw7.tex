@@ -1,0 +1,139 @@
+\input{cs446.tex}
+\usepackage{amsmath}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithm
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{graphicx}
+\usepackage{listings}
+\graphicspath{ {.} }
+
+\DeclareMathOperator{\proj}{proj}
+\newcommand{\vctproj}[2][]{\proj_{\vec{#1}}\vec{#2}}
+
+\sloppy
+\newcommand{\ignore}[1]{}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bw}{{\bf w}}
+
+\newcommand{\bb}[1]{{\bf #1}}
+\newcommand{\pp}{\noindent}
+\newcommand{\ov}{\overline}
+\renewcommand{\labelitemii}{\tiny$\circ$}
+
+\oddsidemargin 0in
+\evensidemargin 0in
+\textwidth 6.5in
+\topmargin -0.5in
+\textheight 9.0in
+
+\begin{document}
+
+\solution{Bangqi Wang}{\today}{7}{Spring 2017}
+% Fill in the above, for example, as follows:
+% \solution{Joe Smith}{\today}{1}{Fall 2012}
+
+\pagestyle{myheadings}  % Leave this command alone
+
+\begin{enumerate}
+\item[1.] Answer to problem 1
+	\begin{enumerate}
+	\item[a.]
+	\begin{eqnarray}
+		P(x^{(j)}) && = \sum_{z \in \{1,2\}} \prod_{i = 0}^{n} P(x_{i}^{(j)}|z)\\
+		&& = \prod_{i = 0}^{n} P(x_{i}^{(j)}|z=1)P(z=1) + \prod_{i = 0}^{n} P(x_{i}^{(j)}|z=2)P(z=2)\\
+		P(x^{(j)}) && = \alpha \prod_{i = 0}^{n} p_i^{x_{i}^{(j)}} (1-p_i)^{1-x_i^{(j)}} + (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}^{(j)}} (1-q_i)^{1-x_i^{(j)}}
+	\end{eqnarray}\\
+	\item[b.] By Bayes Theorem,
+	\begin{eqnarray}
+		f_z^{(j)} && = P(Z = z | x^{(j)}) = \frac{P(Z = z, x^{(j)})}{P(x^{(j)})} = \frac{P(x^{(j)}|Z=z) P(Z=z)}{P(x^{(j)})}\\
+		f_1^{(j)} && = \frac{\alpha \prod_{i = 0}^{n} p_i^{x_{i}^{(j)}} (1-p_i)^{1-x_i^{(j)}}}{\alpha \prod_{i = 0}^{n} p_i^{x_{i}^{(j)}} (1-p_i)^{1-x_i^{(j)}} + (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}^{(j)}} (1-q_i)^{1-x_i^{(j)}}}\\
+		f_2^{(j)} && = \frac{(1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}^{(j)}} (1-q_i)^{1-x_i^{(j)}}}{\alpha \prod_{i = 0}^{n} p_i^{x_{i}^{(j)}} (1-p_i)^{1-x_i^{(j)}} + (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}^{(j)}} (1-q_i)^{1-x_i^{(j)}}}\\
+	\end{eqnarray}\\
+	\item[c.]
+	\begin{eqnarray}
+		L && = \prod_{j=1}^{m} P(x^{(j)}|p,q,\alpha)\\
+		LL && = \sum_{j=1}^{m} log P(x^{(j)}|p,q,\alpha)\\
+	\end{eqnarray}
+	\begin{eqnarray}
+		E[LL] && = E[\sum_{j=1}^{m} log P(x^{(j)}|p,q,\alpha)] = \sum_{j=1}^{m} E[log P(x^{(j)}|p,q,\alpha)]\\
+		&& = \sum_{j=1}^{m} \sum_{z=1}^{2} f_z^{(j)} log P(Z = z, x^{(j)}| \tilde{p}, \tilde{q}, \tilde{\alpha}) - \sum_{j=1}^{m} \sum_{z=1}^{2} f_z^{(j)} log f_z^{(j)}\\
+		&& = \sum_{j=1}^{m} f_1^{(j)} log(\alpha \prod_{i=1}^{n} \tilde{p_i}^{x_i^{(j)}} (1- \tilde{p})^{1-x_i^{(j)}})\\
+		&& \:\:\:\:+ f_2^{(j)} log((1 - \alpha) \prod_{i=1}^{n} \tilde{q_i})^{x_i^{(j)}} (1- \tilde{q}^{1-x_i^{(j)}})\\
+		&& \:\:\:\: - \sum_{j=1}^{m} (f_1^{(j)} log f_1^{(j)} + f_2^{(j)} log f_2^{(j)})
+	\end{eqnarray}\\
+	\item[d.] The expected log likelihood $E[LL]$ will be maximized when the derivative is equal to $0$.
+	\begin{eqnarray}
+		\frac{\partial E}{\partial \tilde{\alpha}} && = \sum_{j=1}^{m} \frac{f_1^{(j)}}{\tilde{\alpha}} - \frac{f_2^{(j)}}{1-\tilde{\alpha}} = 0\\
+		\Rightarrow \tilde{\alpha} && = \frac{\sum_{j=1}^{m} f_1^{(j)}}{m} \\
+		\frac{\partial E}{\partial \tilde{p_i}} && = \sum_{j=1}^{m} \frac{f_1^{(j)} x_i}{\tilde{p_i}} - \frac{f_1^{(j)} (1-x_i)}{1-\tilde{p_i}} = 0\\
+		\Rightarrow \tilde{p_i} && = \frac{\sum_{j=1}^{m} f_1^{(j)} x_i^{(j)}}{\sum_{j=1}^{m} f_1^{(j)}} \\
+		\frac{\partial E}{\partial \tilde{q_i}} && = \sum_{j=1}^{m} \frac{f_2^{(j)} x_i}{\tilde{q_i}} - \frac{f_2^{(j)} (1-x_i)}{1-\tilde{q_i}} = 0\\
+		\Rightarrow \tilde{q_i} && = \frac{\sum_{j=1}^{m} (1-f_2^{(j)}) x_i^{(j)}}{\sum_{j=1}^{m} (1-f_2^{(j)})}
+	\end{eqnarray}\\
+	\newpage
+	\item[e.] $\tilde{\alpha}$ is the estimated probability of generating a sample with $z=1$.\\
+		$\tilde{p}$ is the estimated probability of getting $x_i = 1$ given that $z=1$.\\
+		$\tilde{q}$ is the estimated probability of getting $x_i = 1$ given that $z=2$.
+	% Pseudocode:\\
+		% \begin{enumerate}
+		% \item[i.] Initialize parameters $p$, $q$, $\alpha$ with random values as estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$.
+		% \item[ii.] Calculate the posterior distribution $f_1^{(j)}$ and $f_2^{(j)}$, with the equation from part $(b)$.
+		% \item[iii.] Use the update rules in part $(d)$ to update estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$.
+		% \item[iv.] Repeat step $ii.$ and $iii.$ until the estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$ converge.
+		% \end{enumerate}
+		\begin{algorithm}
+		\caption{Pseudocode:}\label{euclid}
+		\begin{algorithmic}[1]
+		\Procedure{MyProcedure}{}
+		\State Initialize parameters $p$, $q$, $\alpha$ with random values as estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$.
+		\State Calculate the posterior distribution $f_1^{(j)}$ and $f_2^{(j)}$, with the equation from part $(b)$.
+		\State Use the update rules in part $(d)$ to update estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$.
+		\State Repeat step $ii.$ and $iii.$ until the estimations $\tilde{p}$, $\tilde{q}$, $\tilde{\alpha}$ converge.
+		\EndProcedure
+		\end{algorithmic}
+		\end{algorithm}
+	\item[f.] The algorithm will predict $x_0$ as $1$ if $\frac{P(X_0 = 1)}{P(X_0 = 0)} > 1$, otherwise, the algorithm will predict $x_1$ as $0$. Therefore, $x_0 = sign(log\frac{P(X_0=1)}{P(X_0=0)})$.
+	\begin{eqnarray}
+		P(X_0 = 0) && = P(x_0|x_1,...,x_n)\\
+		&& = P(Z=1|x_1,...,x_n)P(X_0=0|Z=1)\\
+		&& \:\:\:\: + P(Z=2|x_1,...,x_n)P(X_0=0|Z=2)\\
+		&& = f_1 p_0 + f_2 q_0\\
+		P(X_0 = 1) && = P(x_0|x_1,...,x_n)\\
+		&& = P(Z=1|x_1,...,x_n)P(X_0=1|Z=1)\\
+		&& \:\:\:\: + P(Z=2|x_1,...,x_n)P(X_0=1|Z=2)\\
+		&& = f_1 (1-p_0) + f_2(1-q_0)
+	\end{eqnarray}
+	\begin{eqnarray}
+		f_1 && = \frac{\alpha \prod_{i = 0}^{n} p_i^{x_{i}} (1-p_i)^{1-x_i}}{\alpha \prod_{i = 0}^{n} p_i^{x_{i}} (1-p_i)^{1-x_i} + (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}} (1-q_i)^{1-x_i}}\\
+		f_2 && = \frac{(1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}} (1-q_i)^{1-x_i}}{\alpha \prod_{i = 0}^{n} p_i^{x_{i}} (1-p_i)^{1-x_i} + (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}} (1-q_i)^{1-x_i}}
+	\end{eqnarray}
+	\begin{eqnarray}
+		x_0 && = sign(log\frac{P(X_0=1)}{P(X_0=0)})\\
+		&& = sign(log(\frac{f_1 (1-p_0) + f_2(1-q_0)}{f_1 p_0 + f_2 q_0}))\\
+		&& = sign(log(\frac{(1-p_0) \alpha \prod_{i = 0}^{n} p_i^{x_{i}} (1-p_i)^{1-x_i} + (1 - q_0) (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}} (1-q_i)^{1-x_i}}{p_0 \alpha \prod_{i = 0}^{n} p_i^{x_{i}} (1-p_i)^{1-x_i} + q_0 (1 - \alpha) \prod_{i = 0}^{n} q_i^{x_{i}} (1-q_i)^{1-x_i}}))\\
+	\end{eqnarray}\\
+	\item[g.] According to the result from part $(f)$, the decision surface for this prediction can transform to a linear function. After transforming,
+	\begin{eqnarray}
+		x_0 && = sign(log(\frac{(1-2p_0) \alpha \prod_{i=0}^{n} p_i^{x_i} (1-p_i)^{1-x_i}}{(1-2q_0) (\alpha - 1) \prod_{i=0}^{n} q_i^{x_i} (1-q_i)^{1-x_i}}))\\
+		&& = log((1-2p_0) \alpha \prod_{i=0}^{n} p_i^{x_i} (1-p_i)^{1-x_i}) - log((1-2q_0) (\alpha - 1) \prod_{i=0}^{n} q_i^{x_i} (1-q_i)^{1-x_i})\\
+		&& = log(\frac{1-2p_0}{1-2q_0}) + log(\frac{\alpha}{\alpha - 1}) + \sum_{i=0}^{n} x_i log(\frac{p_i}{q_i}) + \sum_{i=0}^{n} (1-x_i)log(\frac{1-p_i}{1-q_i})
+	\end{eqnarray}\\
+	\end{enumerate}
+\item[2.] Answer to problem 2
+	\begin{enumerate}
+	\item[a.] The statement means that the probabilities for every event $E$ over variables $x_1,...,x_n$ are equal for two directed trees $T_0$ and $T_1$. The joint probability distributions are the same. $P_{T_0}(x_1,...,x_n) = P_{T_1}(x_1,...,x_n)$.
+	\item[b.] Assume two directed trees $T_i$ and $T_j$ have different roots $x_i$ and $x_j$ from the undirected tree $T$. The resulting directred trees are all equivalent if $P_{T_0}(x) = P_{T_1}(x)$. So, $P(x_1|x_2)P(x_2) = P(x_2|x_1)P(x_1) = P(x_1,x_2)$. \\
+	First, we assume $x_i$ and $x_j$ are nodes in tree $T$, and they are connected by a path $P$ with length $1$. 
+	\begin{eqnarray}
+		P_{T_i}(x) && = P(x_i) \prod_{k \in \{N - i\}}^n P(x_k|Parent_{x_k})\\
+		&& = P(x_i)P(x_j|x_i) \prod_{k \in \{N-P\}} P(x_k|Parent_{x_k})\\
+		&& = P(x_i,x_j) \prod_{k \in \{N-P\}} P(x_k|Parent_{x_k})\\
+		&& = P(x_j)P(x_i|x_j) \prod_{k \in \{N-P\}} P(x_k|Parent_{x_k})\\
+		&& = P(x_j) \prod_{k \in \{N - j\}}^n P(x_k|Parent_{x_k})\\
+		&& = P_{T_j}(x)
+	\end{eqnarray}
+	When the path $P$ has length larger than $1$, the hypothesis still holds. $P(x_{root}) \prod_{k \in \{N - P\}}^n P(x_k|Parent_{x_k})$ remains the same. We can switch the edges between $x_i$ ans $x_j$ according the chain rule. By switching one edge at a time, the resulting directed trees are all equivalent.\\
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}
+

@@ -1,0 +1,161 @@
+\input{cs446.tex}
+\usepackage{amsmath}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithm
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{graphicx}
+\usepackage{listings}
+\graphicspath{ {.} }
+
+\DeclareMathOperator{\proj}{proj}
+\newcommand{\vctproj}[2][]{\proj_{\vec{#1}}\vec{#2}}
+
+\sloppy
+\newcommand{\ignore}[1]{}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bw}{{\bf w}}
+
+\newcommand{\bb}[1]{{\bf #1}}
+\newcommand{\pp}{\noindent}
+\newcommand{\ov}{\overline}
+\renewcommand{\labelitemii}{\tiny$\circ$}
+
+\oddsidemargin 0in
+\evensidemargin 0in
+\textwidth 6.5in
+\topmargin -0.5in
+\textheight 9.0in
+
+\begin{document}
+
+\solution{Bangqi Wang}{\today}{6}{Spring 2017}
+% Fill in the above, for example, as follows:
+% \solution{Joe Smith}{\today}{1}{Fall 2012}
+
+\pagestyle{myheadings}  % Leave this command alone
+
+\begin{enumerate}
+\item[1.] Answer to problem 1
+	\begin{enumerate}
+	\item[a.] $y = sign()\vec{w}^Tx + \theta$ \\
+		$\vec{w} = \{\vec{w_0}, \vec{w_1}, \vec{w_2}, \vec{w_3}, \vec{w_4}, \vec{w_5}, \vec{w_6}, \vec{w_7}, \vec{w_8}\}$ \\
+		For $f_{TH(4,9)}$, $\vec{w} = \{1,1,1,1,1,1,1,1,1\}$, and $\theta = -3.9$. $f_{TH(4,9)}$ has a linear decision surface over the $9$ dimensional boolean cube.\\
+	\item[b.] 
+		\begin{eqnarray}
+			h && = argmax_{y \in \{0,1\}} P(y) = \prod_{i=0}^{n} P(x_i|y) = \prod_{i=0}^{8} P(x_i|y) \\
+			P(x_i|y) && = \frac{P(x_i)P(y|x_i)}{P(y)} \\
+			P(y=0) && = \binom{9}{0}0.5^9 + \binom{9}{1}0.5^9 + \binom{9}{2}0.5^9 + \binom{9}{3}0.5^9 = \frac{65}{256} \\
+			P(y=1) && = 1 - P(y=0) = \frac{191}{256}\\
+			P(x=0|y=0) && = \frac{\binom{8}{0} + \binom{8}{1} + \binom{8}{2} + \binom{8}{3}}{\binom{9}{0} + \binom{9}{1} + \binom{9}{2} + \binom{9}{3}} = \frac{93}{130} \\
+			P(x=0|y=1) && = \frac{\binom{8}{4} + \binom{8}{5} + \binom{8}{6} + \binom{8}{7} + \binom{8}{8}}{0.5^9 - \binom{9}{0} + \binom{9}{1} + \binom{9}{2} + \binom{9}{3}} = \frac{163}{382} \\
+			P(x=1|y=0) && = 1 - P(x=0|y=0) = \frac{37}{130}\\
+			P(x=1|y=1) && = 1 - P(x=0|y=1) = \frac{219}{382}
+		\end{eqnarray}
+			\[ y = argmax_y( P(y=0) \prod_{i=0}^{8} P(x_i|y=0, P(y=1) \prod_{i=0}^{8} P(x_i|y=1) \]
+			\\
+	\item[c.] Assume $\vec{w} = \{1,1,1,0,0,0,0,0,0\}$, which $f_{TH(4,9)} = 0$.
+		\begin{eqnarray}
+			h(y=0) && = \frac{65}{256} \times (\frac{37}{130})^3 \times{93}{130}^6 = 7.8e-4 \\
+			h(y=1) && = \frac{191}{256} \times (\frac{219}{382})^3 \times{163}{382}^6 = 8.5e-4
+		\end{eqnarray}
+		The true label is $0$, but the predicts is $1$ becasue $h(y=1) > h(y=0)$. The prediction is wrong, so the hypothesis does not represent this function.\\
+	\item[d.] The naive bayes assumption is not satisfied by $f_{TH(4,9)}$, because the label from function depends on the the number of activate features. Given the label, the value of each dimension is conditionally dependent to others.\\
+	\end{enumerate}
+\item[2.] Answer to problem 2
+	\begin{enumerate}
+	\item[a.] Prior probabilities and parameter values:
+		\begin{table}[!h]
+		\begin{center}
+		\begin{tabular}{|rp{1in}|rp{1in}|}
+		\hline
+		$\Pr(Y=A)= \frac{3}{7}$ & & $\Pr(Y=B)= \frac{4}{7}$ & \\ \hline
+		$\lambda^A_1=2$ & & $\lambda^B_1=4$ & \\ \hline
+		$\lambda^A_2=5$ & & $\lambda^B_2=3$ & \\ \hline
+		\end{tabular}
+		\caption{Parameters for Poisson na\"ive Bayes}
+		\label{tab:poissonNBparams}
+		\end{center}
+		\end{table}
+		\\
+	\item[b.]
+		\begin{eqnarray}
+		P(X_1 = 2|Y=A) && = \frac{e^{-2}2^2}{2!} = 2e^{-2}\\
+		P(X_2 = 3|Y=A) && = \frac{e^{-5}5^3}{3!} = \frac{125}{6}e^{-5}\\
+		P(X_1 = 2|Y=B) && = \frac{e^{-4}4^2}{2!} = 8e^{-4}\\
+		P(X_2 = 3|Y=B) && = \frac{e^{-3}3^3}{3!} = \frac{9}{2}e^{-3}\\
+		\frac{P(X_1=2,X_2=3|Y=A)}{P(X_1=2,X_2=3|Y=B)} && = \frac{2e^{-2} \times \frac{125}{6}e^{-5}}{8e^{-4} \times \frac{9}{2}e^{-3}} = \frac{125}{108}
+		\end{eqnarray}\\
+	\item[c.] Given $X_1 = x_1$ and $X_2 = x_2$, $Y = A$ iff $\frac{P(Y=A|X_1=2,X_2=3)}{P(Y=B|X_1=2,X_2=3)} \geq 1$
+		\begin{eqnarray}
+		\frac{P(Y=A|X_1=2,X_2=3)}{P(Y=B|X_1=2,X_2=3)} && = \frac{P(X_1=2,X_2=3|Y=A)\cdot P(Y=A)}{P(X_1=2,X_2=3|Y=B)\cdot P(Y=B)}\\
+		&& = \frac{e^{-\lambda_1^A} (-\lambda_1^A)^{x_1} e^{-\lambda_2^A} (-\lambda_2^A)^{x_2} \cdot P(Y=A)}{e^{-\lambda_1^B} (-\lambda_1^B)^{x_1} e^{-\lambda_2^B} (-\lambda_2^B)^{x_2} \cdot P(Y=B)}\\
+		&& \geq 1
+		\end{eqnarray}
+		Taking $log$:
+		\begin{eqnarray}
+		h(x_1,x_2) = \lambda_1^B + \lambda_2^B - \lambda_1^A - \lambda_2^A + log \frac{P(Y=A)}{P(Y=B)} + x_1 log \frac{\lambda_1^A}{\lambda_1^B} + x_2 log \frac{\lambda_2^A}{\lambda_2^B} \geq 0
+		\end{eqnarray}
+		We predict $Y=A$, iff $h(x_1,x_2)\geq 0$.\\
+	\item[d.]
+		\begin{eqnarray}
+		h(x_1,x_2) && = \lambda_1^B + \lambda_2^B - \lambda_1^A - \lambda_2^A + log \frac{P(Y=A)}{P(Y=B)} + x_1 log \frac{\lambda_1^A}{\lambda_1^B} + x_2 log \frac{\lambda_2^A}{\lambda_2^B}\\
+		&& = 4 + 3 - 2 - 5 + log \frac{\frac{3}{7}}{\frac{4}{7}} + 2log \frac{2}{4} + 3log \frac{5}{3}\\
+		&& = log \frac{3}{4} + 2log \frac{1}{2} + 3log{5}{3} \\
+		&& = -0.1415 < 0
+		\end{eqnarray}
+		The classifier predicts $Y$ as $B$, since $h(x_1,x_2) < 0$.\\
+	\end{enumerate}
+\item[3.] Answer to problem 3
+	\begin{enumerate}
+	\item[a.] The order of the words.\\
+	\item[b.] 
+		\begin{eqnarray}
+		P(D_i|y_i) && = P(D_i|Y = y_i) \cdot P(Y=y_i)\\
+		&& = (P(D_i|Y = 1) \cdot P(Y=1))^{y_i}(P(D_i|Y = 0) \cdot P(Y=0))^{1-y_i}\\
+		&& = (\theta \frac{n!}{a_i!b_i!c_i!} \alpha_1 ^{a_i} \beta_1 ^{b_i} \gamma_1 ^{c_i})^{y_i}((1 - \theta) \frac{n!}{a_i!b_i!c_i!} \alpha_0 ^{a_i} \beta_0 ^{b_i} \gamma_0 ^{c_i})^{1-y_i}
+		\end{eqnarray}
+		Taking log:
+		\begin{eqnarray}
+		L = && \sum_{i}log(P(D_i|y_i))\\
+		= && \sum_{i} y_i (log \theta + log \frac{n!}{a_i!b_i!c_i!} + a_i log \alpha_1 + b_i log \beta_1 + c_i log \gamma_1)\\
+		&& + (1-y_i) (log (1-\theta) + log \frac{n!}{a_i!b_i!c_i!} + a_i log \alpha_0 + b_i log \beta_0 + c_i log \gamma_0)
+		\end{eqnarray}
+		\\
+	\item[c.]
+		\begin{eqnarray}
+		L' = && \sum_{i} y_i (log \theta + log \frac{n!}{a_i!b_i!c_i!} + a_i log \alpha_1 + b_i log \beta_1 + c_i log \gamma_1)\\
+		&& \: + (1-y_i) (log (1-\theta) + log \frac{n!}{a_i!b_i!c_i!} + a_i log \alpha_0 + b_i log \beta_0 + c_i log \gamma_0)\\
+		&& \: -\lambda_1(\alpha_1 + \beta_1 + \gamma_1 - 1) -\lambda_0(\alpha_0 + \beta_0 + \gamma_0 - 1)
+		\end{eqnarray}
+		\begin{eqnarray}
+		\frac{\partial L'}{\partial \alpha_1} = \sum_i y_i \frac{a_i}{\alpha_1} - \lambda_1 = 0\\
+		\frac{\partial L'}{\partial \beta_1} = \sum_i y_i \frac{b_i}{\beta_1} - \lambda_1 = 0\\
+		\frac{\partial L'}{\partial \gamma_1} = \sum_i y_i \frac{c_i}{\gamma_1} - \lambda_1 = 0\\
+		\end{eqnarray}
+		\begin{eqnarray}
+		\Rightarrow \alpha_1 = \frac{1}{\lambda} \sum_i y_i a_i\\
+		\Rightarrow \beta_1 = \frac{1}{\lambda} \sum_i y_i b_i\\
+		\Rightarrow \gamma_1 = \frac{1}{\lambda} \sum_i y_i c_i
+		\end{eqnarray}
+		Since $\alpha_1 + \beta_1 + \gamma_1 = \frac{1}{\lambda} \sum_i (a_iy_i + b_iy_i + c_iy_i) = 1$, we know that $\lambda = n \sum_i y_i$.
+		\begin{eqnarray}
+		\Rightarrow && \alpha_1 = \frac{\sum_i y_i a_i}{n \sum_i y_i}, \:\: \beta_1 = \frac{\sum_i y_i b_i}{n \sum_i y_i}, \:\: \gamma_1 = \frac{\sum_i y_i c_i}{n \sum_i y_i}\\
+		\Rightarrow && \alpha_0 = \frac{\sum_i (1-y_i) a_i}{n \sum_i (1-y_i)}, \:\: \beta_0 = \frac{\sum_i (1-y_i) b_i}{n \sum_i (1-y_i)}, \:\: \gamma_0 = \frac{\sum_i (1-y_i) c_i}{n \sum_i (1-y_i)}
+		\end{eqnarray}
+		\\
+\item[4.] Answer to problem 4
+		\begin{eqnarray}
+		P = && (p^2)^k (1-p^2)^(n-k)\\
+		\Rightarrow logP = && 2klogp + (n-k)log(1-p^2)
+		\end{eqnarray}
+		$P$ is max, when $\frac{\partial P}{\partial p} = 0$.
+		\begin{eqnarray}
+		\frac{\partial P}{\partial p} && = \frac{2k}{p} + \frac{-2p(n-k)}{1-p^2} = 0\\
+		\Rightarrow && 2k = 2np^2 \\
+		\Rightarrow && p = \sqrt{\frac{k}{n}}
+		\end{eqnarray}
+		In this sequence, $k = 4$ and $n = 10$. So, $p = \sqrt{\frac{4}{10}} = \sqrt{\frac{2}{5}}$. 
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}
+

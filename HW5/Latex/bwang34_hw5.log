@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  11 APR 2017 14:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  12 APR 2017 01:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**bwang34_hw3.tex
-(./bwang34_hw3.tex
+**bwang34_hw5.tex
+(./bwang34_hw5.tex
 LaTeX2e <2015/01/01>
 Babel <3.9l> and hyphenation patterns for 79 languages loaded.
 (./cs446.tex (/usr/local/texlive/2015/texmf-dist/tex/latex/base/article.cls
@@ -189,21 +189,21 @@ Package: listings 2014/09/06 1.5e (Carsten Heinz)
 LaTeX Warning: Unused global option(s):
     [fullpage].
 
-(./bwang34_hw3.aux)
-\openout1 = `bwang34_hw3.aux'.
+(./bwang34_hw5.aux)
+\openout1 = `bwang34_hw5.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
 
 (/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -268,237 +268,95 @@ e
 ))
 \c@lstlisting=\count132
 
-Underfull \hbox (badness 10000) detected at line 20
+Underfull \hbox (badness 10000) detected at line 30
  []
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 29--30
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 33--33
-[]\OT1/cmr/m/n/12 Dataset
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 33--33
-[]\OT1/cmr/m/n/12 Dataset
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 41--42
-
- []
-
-<figure_1.png, id=1, 953.964pt x 553.5882pt>
-File: figure_1.png Graphic file (type png)
- <use figure_1.png>
-Package pdftex.def Info: figure_1.png used on input line 43.
-(pdftex.def)             Requested size: 426.79134pt x 247.66794pt.
-
-<figure_2.png, id=3, 953.964pt x 555.0336pt>
-File: figure_2.png Graphic file (type png)
- <use figure_2.png>
-Package pdftex.def Info: figure_2.png used on input line 45.
-(pdftex.def)             Requested size: 426.79134pt x 248.31459pt.
-
-Overfull \hbox (12.26073pt too wide) in paragraph at lines 42--47
-[] 
- []
-
-
-Overfull \hbox (12.26073pt too wide) in paragraph at lines 42--47
-[] 
  []
 
 [1
 
-{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./figur
-e_1.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 47--48
+{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[2] [3] <figure_circles.png, id=22, 578.16pt x 433.62pt>
+File: figure_circles.png Graphic file (type png)
+
+<use figure_circles.png>
+Package pdftex.def Info: figure_circles.png used on input line 177.
+(pdftex.def)             Requested size: 469.75499pt x 352.31538pt.
+ <figure_mnist.png, id=24, 578.16pt x 433.62pt>
+File: figure_mnist.png Graphic file (type png)
+
+<use figure_mnist.png>
+Package pdftex.def Info: figure_mnist.png used on input line 184.
+(pdftex.def)             Requested size: 469.75499pt x 352.31538pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 180--186
+
+ []
+
+[4 <./figure_circles.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 187--190
+
+ []
+
+[5 <./figure_mnist.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 215--217
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 224--226
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 51--52
+Underfull \hbox (badness 10000) in paragraph at lines 226--227
 
  []
 
 
-Overfull \hbox (10.90285pt too wide) in paragraph at lines 53--62
- [] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
+Underfull \hbox (badness 10000) in paragraph at lines 234--235
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
-
- []
-
-<figure_3.png, id=13, 832.5504pt x 489.2679pt>
-File: figure_3.png Graphic file (type png)
- <use figure_3.png>
-Package pdftex.def Info: figure_3.png used on input line 65.
-(pdftex.def)             Requested size: 426.79134pt x 250.81487pt.
-
-Overfull \hbox (12.26073pt too wide) in paragraph at lines 64--66
-[] 
- []
-
-[2 <./figure_2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 66--67
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
 
  []
 
 
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 76--76
-[]\OT1/cmr/m/n/12 82.03%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 76--76
-[]\OT1/cmr/m/n/12 62.08%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 76--76
-[]\OT1/cmr/m/n/12 75.57%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 77--77
-[]\OT1/cmr/m/n/12 99.83%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 77--77
-[]\OT1/cmr/m/n/12 97.96%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 77--77
-[]\OT1/cmr/m/n/12 82.41%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 78--78
-[]\OT1/cmr/m/n/12 97.72%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 78--78
-[]\OT1/cmr/m/n/12 89.09%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 78--78
-[]\OT1/cmr/m/n/12 71.43%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 79--79
-[]\OT1/cmr/m/n/12 96.03%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 79--79
-[]\OT1/cmr/m/n/12 92.41%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 79--79
-[]\OT1/cmr/m/n/12 80.89%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 80--80
-[]\OT1/cmr/m/n/12 99.96%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 80--80
-[]\OT1/cmr/m/n/12 99.31%| 
- []
-
-
-Overfull \hbox (2.41196pt too wide) in paragraph at lines 80--80
-[]\OT1/cmr/m/n/12 83.59%| 
- []
-
-
-Overfull \hbox (16.5929pt too wide) in paragraph at lines 72--82
- [] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
+Underfull \hbox (badness 10000) in paragraph at lines 251--252
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 84--85
-
- []
-
-[3 <./figure_3.png>] <figure_4.png, id=24, 578.16pt x 433.62pt>
-File: figure_4.png Graphic file (type png)
-
-<use figure_4.png>
-Package pdftex.def Info: figure_4.png used on input line 89.
-(pdftex.def)             Requested size: 341.43306pt x 256.07178pt.
- <figure_5.png, id=25, 578.16pt x 433.62pt>
-File: figure_5.png Graphic file (type png)
-
-<use figure_5.png>
-Package pdftex.def Info: figure_5.png used on input line 91.
-(pdftex.def)             Requested size: 341.43306pt x 256.07178pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--92
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--92
-
- []
-
-<figure_6.png, id=26, 578.16pt x 433.62pt>
-File: figure_6.png Graphic file (type png)
- <use figure_6.png>
-Package pdftex.def Info: figure_6.png used on input line 93.
-(pdftex.def)             Requested size: 341.43306pt x 256.07178pt.
- [4 <./figure_4.png> <./figure_5.png>] <figure_7.png, id=32, 578.16pt x 433.62p
-t>
-File: figure_7.png Graphic file (type png)
-
-<use figure_7.png>
-Package pdftex.def Info: figure_7.png used on input line 95.
-(pdftex.def)             Requested size: 341.43306pt x 256.07178pt.
- [5 <./figure_6.png> <./figure_7.png>] (./bwang34_hw3.aux) ) 
+[8] (./bwang34_hw5.aux) ) 
 Here is how much of TeX's memory you used:
- 3964 strings out of 493089
- 55422 string characters out of 6134842
- 126783 words of memory out of 5000000
- 7402 multiletter control sequences out of 15000+600000
+ 3949 strings out of 493089
+ 55142 string characters out of 6134842
+ 132812 words of memory out of 5000000
+ 7392 multiletter control sequences out of 15000+600000
  8354 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,9n,32p,560b,306s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive
-/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/
-2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2
-015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/201
-5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl12.pfb></usr/local/texlive/2015
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on bwang34_hw3.pdf (5 pages, 395548 bytes).
+ 38i,12n,32p,542b,435s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmex10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi6.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmsl12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
+i12.pfb>
+Output written on bwang34_hw5.pdf (8 pages, 246318 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 28 compressed objects within 1 object stream
+ 80 PDF objects out of 1000 (max. 8388607)
+ 54 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
